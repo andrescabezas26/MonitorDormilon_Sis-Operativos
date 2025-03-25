@@ -5,10 +5,12 @@ import java.util.Queue;
 public class MonitorDormilon {
 
     private static final int NUM_SILLAS = 3;
-    private static final int NUM_ESTUDIANTES = 4;
+    private static final int NUM_ESTUDIANTES = 6;
 
+    // Semáforo usado para el monitor
     private static Semaphore monitor = new Semaphore(1, true);
     private static Queue<Integer> sillas = new LinkedList<>();
+    private static boolean isSleeping = false;
 
     public static void main(String[] args) {
         // Crear el hilo del monitor
@@ -25,16 +27,20 @@ public class MonitorDormilon {
         @Override
         public void run() {
             try {
-                boolean isSleeping = false;
+                isSleeping = false;
                 while (true) {
+                    // Si no hay estudiantes y el monitor no está dormido, se duerme
                     if (sillas.isEmpty() && !isSleeping) {
                         System.out.println("[Monitor]: No hay estudiantes. Me voy a dormir.");
                         isSleeping = true;
                         monitor.acquire(); // El monitor duerme
-                    }else if(sillas.isEmpty() && isSleeping){
+
+                    } // Si no hay estudiantes y el monitor ya está dormido, continúa durmiendo
+                    else if (sillas.isEmpty() && isSleeping) {
                         monitor.acquire(); // El monitor duerme
-                    } else {
-                        isSleeping = false;
+                    } // Si hay estudiantes, atiende al siguiente en la cola
+                    else {
+                        isSleeping = false; // El monitor despierta
                         int estudianteId;
                         synchronized (sillas) {
                             estudianteId = sillas.poll(); // Atiende al siguiente en la cola
@@ -61,16 +67,24 @@ public class MonitorDormilon {
         public void run() {
             try {
                 while (true) {
-                    Thread.sleep((long) (Math.random() * 10000 + 5000)); // Simula el tiempo programando (mayor que el tiempo de atención)
+                    Thread.sleep((long) (Math.random() * 10000 + 5000)); // Simula el tiempo programando
+                    // (mayor que el tiempo de atención)
                     System.out.println("[Estudiante " + id + "]: Necesito ayuda del monitor.");
 
                     synchronized (sillas) {
                         if (sillas.size() < NUM_SILLAS) {
                             sillas.add(id);
-                            System.out.println("[Estudiante " + id + "]: Me senté en una silla del corredor. (Sillas ocupadas: " + sillas.size() + ")");
+                            System.out.println(
+                                    "[Estudiante " + id + "]: Me senté en una silla del corredor. (Sillas ocupadas: "
+                                            + sillas.size() + ")");
+                            if (isSleeping) { // Verifica si el monitor está dormido
+                                System.out.println(
+                                        "[Estudiante " + id + "]: El monitor está dormido. Lo voy a despertar.");
+                            }
                             monitor.release(); // Despierta al monitor si está dormido
                         } else {
-                            System.out.println("[Estudiante " + id + "]: No hay sillas disponibles. Voy a la sala de computo y vuelvo más tarde.");
+                            System.out.println("[Estudiante " + id
+                                    + "]: No hay sillas disponibles. Voy a la sala de computo y vuelvo más tarde.");
                         }
                     }
 

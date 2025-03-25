@@ -21,13 +21,13 @@ El proyecto "Monitor Dormilón" es una simulación del problema de sincronizaci�
 
 ## Ejecución del Proyecto
 1. Clona o descarga el repositorio.
-2. Compila el archivo **MonitorDormilon.java**:
+2. Compila el archivo **MonitorDormilon.java**, desde la carpeta raiz ejecuta el siguiente comando:
    ```
-   javac MonitorDormilon.java
+   javac -d bin -sourcepath src src/MonitorDormilon.java
    ```
-3. Ejecuta el programa:
+3. Ejecuta el programa, desde la carpeta raiz ejecuta el siguiente comando:
    ```
-   java MonitorDormilon
+   java src/MonitorDormilon.java
    ```
 
 ## Ejemplo de Salida
