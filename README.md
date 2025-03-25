@@ -41,5 +41,5 @@ El proyecto "Monitor Dormilón" es una simulación del problema de sincronizaci�
 ```
 
 **Autores:** [Davide Flamini](https://github.com/davidone007) - [Andrés Cabezas](https://github.com/andrescabezas26)-
-[Nicolas Cuellar](https://github.com/Nicolas-CM)**  
+[Nicolas Cuellar](https://github.com/Nicolas-CM)  
 
